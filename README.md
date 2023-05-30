@@ -1,13 +1,35 @@
-# HI-LONa installation with docker
+# HI-LONa Installation with Docker
 
-## Running MediaWiki on local machine
+## Starting the MediaWiki Container on the Local Machine if LocalSettings.php Already Exists
 
-First, start with the docker-compose.yml provided at DockerHub (https://hub.docker.com/_/mediawiki) by running `docker compose up` from the corresponding folder.
+All the important settings for the Wiki, such as database credentials, appearance, user rights, and extensions, can be managed inside the 'LocalSettings.php' file. If this file already exists, it can be linked as a volume in the following way:
 
-MediaWiki will then be accessible at http://localhost:8080.
+```yaml
+services:
+  mediawiki:
+    image: mediawiki
+    restart: always
+    ports:
+      - 8080:80
+    links:
+      - database
+    volumes:
+      - images:/var/www/html/images
+      # After the initial setup, download LocalSettings.php to the same directory as
+      # this YAML file, uncomment the following line, and use compose to restart
+      # the mediawiki service
+      - ./LocalSettings.php:/var/www/html/LocalSettings.php
+```
 
-Initially, the installation of MediaWiki needs to be performed through the browser using the default settings. The credentials specified in the YAML file (the host is set as database in the YAML, which should also be entered in the browser) need to be used.
+The root folder should now contain the `LocalSettings.php` and `docker-compose.yml` files. To start the container, navigate to the root directory and run `docker compose up`. The Wiki should be accessible through a web browser via http://localhost:8080.
 
+## Setting up MediaWiki if No LocalSettings.php File is Present
+
+If there is no existing `LocalSettings.php` file, follow these steps:
+
+1. Start by using the provided `docker-compose.yml` file from DockerHub (https://hub.docker.com/_/mediawiki) and run `docker compose up` from the corresponding folder.
+2. MediaWiki will be accessible at http://localhost:8080.
+3. Initially, the installation of MediaWiki needs to be performed through the browser using the default settings. Use the credentials specified in the YAML file (the database host specified in the YAML should also be entered in the browser).
 ```yaml
   database:
     image: mariadb
@@ -21,11 +43,8 @@ Initially, the installation of MediaWiki needs to be performed through the brows
     volumes:
       - db:/var/lib/mysql
 ```
-
-Once the installation is complete, a `LocalSettings.php` file will be generated and can be downloaded. This file should be copied to the root folder along with the `docker-compose.yaml` file and then mapped as a volume in the compose file.
-
-To do this, uncomment the last line:
-
+4. Once the installation is complete, a `LocalSettings.php` file will be generated. Download this file and copy it to the root folder along with the `docker-compose.yaml` file.
+5. Uncomment the line `- ./LocalSettings.php:/var/www/html/LocalSettings.php` in the `docker-compose.yml` file:
 ```yaml
 services:
   mediawiki:
@@ -37,13 +56,10 @@ services:
       - database
     volumes:
       - images:/var/www/html/images
-      # After initial setup, download LocalSettings.php to the same directory as
-      # this yaml and uncomment the following line and use compose to restart
+      # After the initial setup, download LocalSettings.php to the same directory as
+      # this YAML file, uncomment the following line, and use compose to restart
       # the mediawiki service
-      # ./LocalSettings.php:/var/www/html/LocalSettings.php
+      # - ./LocalSettings.php:/var/www/html/LocalSettings.php
 ```
-
-Now, restart by running `docker compose down` followed by `docker compose up`.
-
-Settings (including the username and password for the database) can now be managed in the `LocalSettings.php` file.
-
+6. Restart by running `docker compose down`, followed by `docker compose up`.
+7. The settings, including the database username and password, can now be managed in the `LocalSettings.php` file.
