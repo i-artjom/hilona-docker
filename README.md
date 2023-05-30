@@ -2,7 +2,7 @@
 
 ## Starting the MediaWiki Container on the Local Machine if LocalSettings.php Already Exists
 
-All the important settings for the Wiki, such as database credentials, appearance, user rights, and extensions, can be managed inside the 'LocalSettings.php' file. If this file already exists, it can be linked as a volume in the following way:
+All the important settings for the Wiki, such as database credentials, appearance, user rights, and extensions, can be managed inside the 'LocalSettings.php' file. If this file already exists, it can be linked as a volume in the following way (last line `- ./LocalSettings.php:/var/www/html/LocalSettings.php`):
 
 ```yaml
 services:
