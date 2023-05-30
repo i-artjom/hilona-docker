@@ -2,7 +2,7 @@
 
 ## Running MediaWiki on local machine
 
-First, start with the docker-compose.yml provided at DockerHub (https://hub.docker.com/_/mediawiki) by `running docker compose up` from the corresponding folder.
+First, start with the docker-compose.yml provided at DockerHub (https://hub.docker.com/_/mediawiki) by running `docker compose up` from the corresponding folder.
 
 MediaWiki will then be accessible at http://localhost:8080.
 
